@@ -1,0 +1,400 @@
+{
+	"info": {
+		"_postman_id": "2b6a22cd-034f-431d-bb22-b167557fef41",
+		"name": "book-store-mongo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get all books.",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2f786791-4422-40dd-8114-cf8a1382a85f",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/books",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Insert new book.",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f9add8ab-2dc0-4af5-be4d-603dbd18bf26",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"var response = pm.response.json();",
+							"pm.environment.set(\"book_id\", response.id);",
+							"",
+							"postman.setNextRequest('Get inserted book.');"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"author\": \"Leo Tolstoy\",\n    \"country\": \"Russia\",\n    \"imageLink\": \"images/war-and-peace.jpg\",\n    \"language\": \"Russian\",\n    \"link\": \"https://en.wikipedia.org/wiki/War_and_Peace\",\n    \"pages\": 1296,\n    \"title\": \"War and Peace\",\n    \"year\": 1867\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/books",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get inserted book.",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "08ff5a86-8cfb-4453-8725-0660c947bb93",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var response = pm.response.json();",
+							"",
+							"pm.test(\"Check author\", function () {",
+							"    pm.expect(response.author).to.eql(\"Leo Tolstoy\");",
+							"});",
+							"",
+							"pm.test(\"Check country\", function () {",
+							"    pm.expect(response.country).to.eql(\"Russia\");",
+							"});",
+							"",
+							"pm.test(\"Check imageLink\", function () {",
+							"    pm.expect(response.imageLink).to.eql(\"images/war-and-peace.jpg\");",
+							"});",
+							"",
+							"pm.test(\"Check language\", function () {",
+							"    pm.expect(response.language).to.eql(\"Russian\");",
+							"});",
+							"",
+							"pm.test(\"Check link\", function () {",
+							"    pm.expect(response.link).to.eql(\"https://en.wikipedia.org/wiki/War_and_Peace\");",
+							"});",
+							"",
+							"pm.test(\"Check pages\", function () {",
+							"    pm.expect(response.pages).to.eql(1296);",
+							"});",
+							"",
+							"pm.test(\"Check title\", function () {",
+							"    pm.expect(response.title).to.eql(\"War and Peace\");",
+							"});",
+							"",
+							"pm.test(\"Check year\", function () {",
+							"    pm.expect(response.year).to.eql(1867);",
+							"});",
+							"",
+							"postman.setNextRequest('Update book by id.');"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/books/{{book_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"books",
+						"{{book_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update book by id.",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2248733f-2963-4b50-8ec0-47e245f2a16f",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							"",
+							"postman.setNextRequest('Get updated book.');"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"author\": \"Fernando Pessoa\",\n\t\"country\": \"Portugal\",\n\t\"imageLink\": \"images/the-book-of-disquiet.jpg\",\n\t\"language\": \"Portuguese\",\n\t\"link\": \"https://en.wikipedia.org/wiki/The_Book_of_Disquiet\",\n\t\"pages\": 272,\n\t\"title\": \"The Book of Disquiet\",\n\t\"year\": 1928\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/books/{{book_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"books",
+						"{{book_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get updated book.",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "08ff5a86-8cfb-4453-8725-0660c947bb93",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var response = pm.response.json();",
+							"",
+							"pm.test(\"Check author\", function () {",
+							"    pm.expect(response.author).to.eql(\"Fernando Pessoa\");",
+							"});",
+							"",
+							"pm.test(\"Check country\", function () {",
+							"    pm.expect(response.country).to.eql(\"Portugal\");",
+							"});",
+							"",
+							"pm.test(\"Check imageLink\", function () {",
+							"    pm.expect(response.imageLink).to.eql(\"images/the-book-of-disquiet.jpg\");",
+							"});",
+							"",
+							"pm.test(\"Check language\", function () {",
+							"    pm.expect(response.language).to.eql(\"Portuguese\");",
+							"});",
+							"",
+							"pm.test(\"Check link\", function () {",
+							"    pm.expect(response.link).to.eql(\"https://en.wikipedia.org/wiki/The_Book_of_Disquiet\");",
+							"});",
+							"",
+							"pm.test(\"Check pages\", function () {",
+							"    pm.expect(response.pages).to.eql(272);",
+							"});",
+							"",
+							"pm.test(\"Check title\", function () {",
+							"    pm.expect(response.title).to.eql(\"The Book of Disquiet\");",
+							"});",
+							"",
+							"pm.test(\"Check year\", function () {",
+							"    pm.expect(response.year).to.eql(1928);",
+							"});",
+							"",
+							"postman.setNextRequest('Delete book by id.');"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/books/{{book_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"books",
+						"{{book_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete book by id.",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "24d1ccda-990a-44fd-ac15-b5338a2db237",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							"",
+							"postman.setNextRequest('Book is no longer available.');"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/books/{{book_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"books",
+						"{{book_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Book is no longer available.",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "08ff5a86-8cfb-4453-8725-0660c947bb93",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/books/{{book_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"books",
+						"{{book_id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

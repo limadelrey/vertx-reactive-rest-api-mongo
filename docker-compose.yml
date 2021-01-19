@@ -1,0 +1,37 @@
+version: '3.5'
+
+services:
+  db:
+    image: mongo
+    container_name: book-store-db-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "27017:27017"
+
+  db-seed:
+    build: './src/main/docker/db-seed'
+    depends_on:
+      - db
+
+  api:
+    build: './src/main/docker/api'
+    container_name: book-store-api-mongo
+    environment:
+      HOST: "db"
+      USERNAME: "root"
+      PASSWORD: "example"
+      AUTHSOURCE: "admin"
+      DB_NAME: "book-store"
+      HTTP_PORT: 8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+      - db-seed
+
+networks:
+  default:
+    external:
+      name: book-store-network
